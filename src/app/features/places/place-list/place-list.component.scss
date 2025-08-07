@@ -1,0 +1,10 @@
+.place-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+}
+
+mat-form-field {
+  min-width: 200px;
+}

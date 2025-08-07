@@ -1,0 +1,45 @@
+<ng-container *ngIf="store.loading(); else loaded">
+  <mat-card>
+    <mat-spinner></mat-spinner>
+  </mat-card>
+</ng-container>
+
+<ng-template #loaded>
+  <mat-card class="mat-elevation-z2" style="padding: 1rem; margin-bottom: 1rem;">
+    <h2>Places</h2>
+
+    <form (ngSubmit)="add()" class="place-form">
+      <mat-form-field appearance="fill">
+        <mat-label>Place name</mat-label>
+        <input
+          matInput
+          [(ngModel)]="newPlace.name"
+          name="name"
+          required
+        />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Type</mat-label>
+        <mat-select [(ngModel)]="newPlace.type" name="type" required>
+          <mat-option *ngFor="let t of placeTypes" [value]="t.value">
+            {{ t.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" type="submit">Add</button>
+    </form>
+  </mat-card>
+
+  <mat-card class="mat-elevation-z1" style="padding: 1rem;">
+    <mat-list>
+      <mat-list-item *ngFor="let place of store.places()">
+        <div mat-line>{{ place.name }} ({{ place.type }})</div>
+        <button mat-icon-button color="warn" (click)="delete(place.id)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </mat-list-item>
+    </mat-list>
+  </mat-card>
+</ng-template>
