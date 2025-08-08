@@ -1,0 +1,25 @@
+<div class="p-4 border rounded bg-white shadow">
+  <h3 class="text-xl font-semibold mb-4">Route Planner</h3>
+
+  <div>
+  <label for="placeSelect">Add place:</label>
+  <select [(ngModel)]="selectedPlaceId" id="placeSelect">
+    <option *ngFor="let place of places" [value]="place.id">{{ place.name }}</option>
+  </select>
+  <button (click)="addPlaceToRoute()">Add</button>
+</div>
+
+  <ul>
+    <li *ngFor="let rs of routeStores" class="flex justify-between items-center mb-2">
+      <div>
+        <span class="font-bold">{{ rs.order }}.</span>
+        {{ rs.place.name }}
+      </div>
+      <div class="space-x-2">
+        <button (click)="move(rs.id, 'up')" class="px-2 py-1 bg-gray-200">⬆️</button>
+        <button (click)="move(rs.id, 'down')" class="px-2 py-1 bg-gray-200">⬇️</button>
+        <button (click)="remove(rs.id)" class="px-2 py-1 bg-red-500 text-white">🗑️</button>
+      </div>
+    </li>
+  </ul>
+</div>

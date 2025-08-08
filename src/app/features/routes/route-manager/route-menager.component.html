@@ -1,0 +1,27 @@
+<h2>Route Manager</h2>
+
+<form (ngSubmit)="createRoute()" class="mb-4">
+  <input
+    [(ngModel)]="newRouteName"
+    name="routeName"
+    placeholder="New route name"
+    required
+    class="border px-2 py-1 rounded"
+  />
+  <button type="submit" class="bg-green-600 text-white px-3 py-1 rounded">
+    ➕ Create Route
+  </button>
+</form>
+
+<ul class="mb-4">
+  <li *ngFor="let route of routes">
+    <button (click)="selectRoute(route.id)">
+      📦 {{ route.name }}
+    </button>
+  </li>
+</ul>
+
+<app-route-planner
+  *ngIf="selectedRouteId"
+  [routeId]="selectedRouteId"
+></app-route-planner>

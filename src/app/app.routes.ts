@@ -11,7 +11,7 @@ export const appRoutes: Routes = [
   {
     path: 'routes',
     loadComponent: () =>
-      import('./features/routes/routes.component').then(m => m.RoutesComponent)
+      import('./features/routes/route-manager/route-menager.component').then(m => m.RouteMenagerComponent)
   },
   {
     path: 'drivers',
