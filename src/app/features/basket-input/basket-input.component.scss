@@ -1,0 +1,64 @@
+.input-container {
+  max-width: 320px;
+  margin: auto;
+  text-align: center;
+}
+
+.display {
+  font-size: 2rem;
+  padding: 1rem;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  user-select: none;
+  min-height: 50px;
+}
+
+.quick-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.quick-buttons button {
+  font-size: 1.2rem;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  border: none;
+  background-color: #e0e0e0;
+  cursor: pointer;
+}
+
+.numpad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.numpad button {
+  font-size: 1.5rem;
+  padding: 1rem;
+  border-radius: 8px;
+  border: none;
+  background-color: #f0f0f0;
+  cursor: pointer;
+  user-select: none;
+}
+
+.confirm {
+  font-size: 1.3rem;
+  padding: 1rem 2rem;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.error {
+  color: red;
+  margin-top: 0.5rem;
+}

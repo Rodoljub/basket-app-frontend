@@ -25,3 +25,7 @@
   *ngIf="selectedRouteId"
   [routeId]="selectedRouteId"
 ></app-route-planner>
+
+
+<app-basket-input (confirmed)="onBasketChange($event)"></app-basket-input>
+

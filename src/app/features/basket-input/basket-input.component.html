@@ -1,0 +1,37 @@
+<div class="input-container">
+  <h3>Enter basket movement</h3>
+
+  <div class="display">
+    {{ currentValue >= 0 ? '+' : '' }}{{ currentValue }}
+  </div>
+
+  <!-- Quick select buttons -->
+  <div class="quick-buttons">
+    <button *ngFor="let val of quickValues" (click)="addValue(val)">
+      {{ val > 0 ? '+' + val : val }}
+    </button>
+  </div>
+
+  <!-- Custom numpad -->
+  <div class="numpad">
+    <button (click)="appendDigit('1')">1</button>
+    <button (click)="appendDigit('2')">2</button>
+    <button (click)="appendDigit('3')">3</button>
+    <button (click)="appendDigit('4')">4</button>
+    <button (click)="appendDigit('5')">5</button>
+    <button (click)="appendDigit('6')">6</button>
+    <button (click)="appendDigit('7')">7</button>
+    <button (click)="appendDigit('8')">8</button>
+    <button (click)="appendDigit('9')">9</button>
+    <button (click)="toggleSign()">+/-</button>
+    <button (click)="appendDigit('0')">0</button>
+    <button (click)="deleteDigit()">⌫</button>
+  </div>
+
+  <button class="confirm" [disabled]="!canConfirm()" (click)="confirm()">
+    Confirm
+  </button>
+
+  <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+</div>
+

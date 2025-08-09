@@ -9,7 +9,8 @@ import { MaterialModule } from '../../../material.module';
   selector: 'app-place-list',
   standalone: true,
   imports: [CommonModule, FormsModule, MaterialModule],
-  templateUrl: './place-list.component.html'
+  templateUrl: './place-list.component.html',
+  styleUrls: ['./place-list.component.scss']
 })
 export class PlaceListComponent {
   readonly store = inject(PlaceStore);

@@ -34,7 +34,7 @@
 
   <mat-card class="mat-elevation-z1" style="padding: 1rem;">
     <mat-list>
-      <mat-list-item *ngFor="let place of store.places()">
+      <mat-list-item class="place-list" *ngFor="let place of store.places()">
         <div mat-line>{{ place.name }} ({{ place.type }})</div>
         <button mat-icon-button color="warn" (click)="delete(place.id)">
           <mat-icon>delete</mat-icon>

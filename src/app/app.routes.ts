@@ -16,7 +16,7 @@ export const appRoutes: Routes = [
   {
     path: 'drivers',
     loadComponent: () =>
-      import('./features/drivers/drivers.component').then(m => m.DriversComponent)
+      import('./features/drivers/driver-list/driver-list.component').then(m => m.DriverListComponent)
   },
   {
     path: '*',
