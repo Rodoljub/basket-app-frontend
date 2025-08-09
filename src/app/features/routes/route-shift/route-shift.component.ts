@@ -9,6 +9,8 @@ import { PlaceService } from '../../places/place.service';
 import { Place } from '../../places/place.model';
 import { RouteStore } from '../route-store.model';
 import { RouteStoreService } from '../route-store.service';
+import { BasketService } from './basket-input/basket.service';
+import { Inventory, InventoryService } from '../../inventory/inventory.service';
 
 
 @Component({
@@ -31,17 +33,25 @@ drivers: Driver[] = [];
 
   shiftStarted = false;
 
+  currentInventory: Inventory[] = [];
+  
   constructor(
     private driverService: DriverService,
     private placeService: PlaceService,
     private routeService: RouteService,
-    private routeStoreService: RouteStoreService
+    private routeStoreService: RouteStoreService,
+    private basketService: BasketService,
+    private inventoryService: InventoryService
   ) {}
 
   ngOnInit() {
     this.loadDrivers();
     this.loadVans();
     this.loadRoutes();
+
+        this.inventoryService.inventory$.subscribe(inv => {
+      this.currentInventory = inv;
+    });
   }
 
   loadDrivers() {
@@ -59,16 +69,52 @@ drivers: Driver[] = [];
   onSelectionChange() {
     // Reset dependent states if driver or van changes
     if (this.shiftStarted) return; // prevent changes after shift started
+
     this.selectedRouteId = null;
     this.places = [];
     this.selectedPlace = null;
   }
+
+  assignDriverToRoute() {
+  if (this.selectedRouteId && this.selectedDriverId) {
+    const route = this.routes.find(r => r.id === this.selectedRouteId);
+    const routeName = route?.name || '';
+
+    this.routeService.updateRoute(this.selectedRouteId, routeName, this.selectedDriverId).subscribe({
+      next: updatedRoute => {
+        console.log('Route updated with driver:', updatedRoute);
+        // Reload places because route might have changed
+        this.loadPlaces();
+      },
+      error: err => {
+        console.error('Failed to update route with driver:', err);
+      }
+    });
+  }
+}
+
+  onVanSelected() {
+  if (this.selectedDriverId && this.selectedVanId) {
+    this.driverService.updateDriver(this.selectedDriverId,{ vanId: this.selectedVanId })
+      .subscribe({
+        next: () => {
+          console.log('Driver van updated');
+          // Optionally reload drivers to sync UI
+          this.loadDrivers();
+        },
+        error: (err) => {
+          console.error('Failed to update driver van', err);
+        }
+      });
+  }
+}
 
   loadPlaces() {
     if (!this.selectedRouteId) {
       this.places = [];
       return;
     }
+
     this.routeStoreService.getByRoute(this.selectedRouteId).subscribe(data => this.places = data);
   }
 
@@ -90,6 +136,7 @@ drivers: Driver[] = [];
 
   startShift() {
     if (this.selectedDriverId && this.selectedVanId && this.selectedRouteId) {
+      this.assignDriverToRoute()
       this.shiftStarted = true;
       this.selectedPlace = null; // start with no place selected
     }
@@ -113,9 +160,37 @@ drivers: Driver[] = [];
     this.selectedPlace = null;
   }
 
-  onBasketInputConfirmed(basketChange: number) {
-    console.log(`Basket movement for ${this.selectedPlace?.place.name}:`, basketChange);
+  onBasketInputConfirmed(delta: number) {
+    // console.log(`Basket movement for ${this.selectedPlace?.place.name}:`, basketChange);
     // TODO: send movement to backend here
+
+    if (!this.selectedPlace?.id || !this.selectedRouteId || !this.selectedDriverId) {
+    console.error('Missing required selection');
+    return;
+  }
+
+  this.basketService.createSimplifiedMovement(
+    this.selectedPlace.id,
+    this.selectedRouteId,
+    this.selectedDriverId,
+    'BIG', // Later: make dynamic
+    delta
+  ).subscribe({
+    next: (res) => {
+      console.log('Movement recorded', res);
+      console.log('selectedPlace', this.selectedPlace?.place.id);
+      
+
+      if (this.selectedPlace?.place.id) {
+  this.inventoryService.loadInventoryForPlace(this.selectedPlace.place.id);
+}
+
+
+    },
+    error: (err) => {
+      console.error('Error recording movement', err);
+    }
+  });
 
     this.closeBasketInput();
   }

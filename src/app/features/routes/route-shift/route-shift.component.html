@@ -2,12 +2,12 @@
 
 <label>Driver:</label>
 <select [(ngModel)]="selectedDriverId" (change)="onSelectionChange()">
-  <option [ngValue]="null" disabled selected>-- Select Driver --</option>
+  <option [ngValue]="null" disabled >-- Select Driver --</option>
   <option *ngFor="let driver of drivers" [ngValue]="driver.id">{{ driver.name }}</option>
 </select>
 
 <label>Van:</label>
-<select [(ngModel)]="selectedVanId" (change)="onSelectionChange()" [disabled]="!selectedDriverId">
+<select [(ngModel)]="selectedVanId" (change)="onVanSelected()" [disabled]="!selectedDriverId">
   <option [ngValue]="null" disabled selected>-- Select Van --</option>
   <!-- van.plateNumber -->
   <option *ngFor="let van of vans" [ngValue]="van.id">{{ van.name }}</option>

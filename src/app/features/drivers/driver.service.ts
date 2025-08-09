@@ -23,9 +23,17 @@ export class DriverService {
     return this.http.post<Driver>(this.apiUrl, driver);
   }
 
-  updateDriver(id: number, driver: Partial<Driver>): Observable<Driver> {
-    return this.http.put<Driver>(`${this.apiUrl}/${id}`, driver);
-  }
+  // updateDriver(id: number, driver: Partial<Driver>): Observable<Driver> {
+  //   return this.http.put<Driver>(`${this.apiUrl}/${id}`, driver);
+  // }
+
+  updateDriver(driverId: number, updateData: Partial<{ vanId: number; name: string }>): Observable<Object>  {
+  return this.http.patch(`${this.apiUrl}/${driverId}`, updateData);
+}
+
+//   updateDriverVan(driverId: number, vanId: number) {
+//   return this.http.patch(`${this.apiUrl}/${driverId}`, { vanId });
+// }
 
   deleteDriver(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
