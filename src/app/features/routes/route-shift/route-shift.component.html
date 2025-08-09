@@ -1,59 +1,49 @@
 <h2>Assign Route Shift</h2>
 
-
 <label>Driver:</label>
-<select [(ngModel)]="selectedDriverId" (change)="onDriverOrVanChange()">
+<select [(ngModel)]="selectedDriverId" (change)="onSelectionChange()">
   <option [ngValue]="null" disabled selected>-- Select Driver --</option>
-  <option *ngFor="let driver of drivers" [value]="driver.id">{{ driver.name }}</option>
+  <option *ngFor="let driver of drivers" [ngValue]="driver.id">{{ driver.name }}</option>
 </select>
 
 <label>Van:</label>
-<select [(ngModel)]="selectedVanId" (change)="onDriverOrVanChange()" [disabled]="!selectedDriverId">
+<select [(ngModel)]="selectedVanId" (change)="onSelectionChange()" [disabled]="!selectedDriverId">
   <option [ngValue]="null" disabled selected>-- Select Van --</option>
-  <option *ngFor="let van of vans" [value]="van.id">{{ van.name }}</option>
+  <!-- van.plateNumber -->
+  <option *ngFor="let van of vans" [ngValue]="van.id">{{ van.name }}</option>
 </select>
 
 <label>Route:</label>
-<select [(ngModel)]="selectedRouteId" (change)="loadPlaces()" [disabled]="!selectedDriverId || !selectedVanId">
+<select [(ngModel)]="selectedRouteId" (change)="loadPlaces()" [disabled]="!selectedVanId">
   <option [ngValue]="null" disabled selected>-- Select Route --</option>
-  <option *ngFor="let route of filteredRoutes" [value]="route.id">
-    {{ route.name || ('Route #' + route.id) }}
-  </option>
+  <option *ngFor="let route of routes" [ngValue]="route.id">{{ route.name || ('Route #' + route.id) }}</option>
 </select>
 
-<!-- Select Driver -->
-<!-- <label>Driver:</label>
-<select [(ngModel)]="selectedDriverId" (change)="onSelectionChange()">
-  <option *ngFor="let driver of drivers" [value]="driver.id">{{ driver.name }}</option>
-</select> -->
+<!-- Shift Summary Panel -->
+<div *ngIf="selectedDriverId && selectedVanId && selectedRouteId" class="shift-summary">
+  <h3>Shift Summary</h3>
+  <p><strong>Driver:</strong> {{ getDriverName(selectedDriverId) }}</p>
+  <p><strong>Van:</strong> {{ getVanPlate(selectedVanId) }}</p>
+  <p><strong>Route:</strong> {{ getRouteName(selectedRouteId) }}</p>
+  <p><strong>Stops:</strong> {{ places.length }}</p>
 
-<!-- Select Van -->
-<!-- <label>Van:</label>
-<select [(ngModel)]="selectedVanId" (change)="onSelectionChange()">
-  <option *ngFor="let van of vans" [value]="van.id">{{ van.name }}</option>
-</select> -->
+  <button (click)="startShift()" [disabled]="shiftStarted">Start Shift</button>
+  <button (click)="resetSelection()" [disabled]="shiftStarted">Reset</button>
+</div>
 
-<!-- Select Route -->
-<!-- <label>Route:</label>
-<select [(ngModel)]="selectedRouteId" (change)="loadPlaces()">
-  <option *ngFor="let route of filteredRoutes" [value]="route.id">
-    {{ route.name || ('Route #' + route.id) }}
-  </option>
-</select> -->
+<!-- Basket input dialog -->
+<div *ngIf="shiftStarted && selectedPlace">
+  <h3>Basket Movement - {{ selectedPlace.place.name }}</h3>
+  <app-basket-input (confirmed)="onBasketInputConfirmed($event)"></app-basket-input>
+  <button (click)="closeBasketInput()">Close</button>
+</div>
 
-<!-- Show Warehouses and Stores after selection -->
-<div *ngIf="places.length > 0">
+<!-- Places list -->
+<div *ngIf="shiftStarted && places.length > 0 && !selectedPlace" class="places-list">
   <h3>Select Place to enter basket movement</h3>
   <ul>
     <li *ngFor="let place of places">
       <button (click)="openPlace(place)">{{ place.place.name }} ({{ place.place.type }})</button>
     </li>
   </ul>
-</div>
-
-<!-- Basket input dialog -->
-<div *ngIf="selectedPlace">
-  <h3>Basket Movement - {{ selectedPlace.name }}</h3>
-  <app-basket-input (confirmed)="onBasketInputConfirmed($event)"></app-basket-input>
-  <button (click)="closeBasketInput()">Close</button>
 </div>

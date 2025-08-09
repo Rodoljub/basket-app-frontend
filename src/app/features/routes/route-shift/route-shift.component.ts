@@ -19,23 +19,23 @@ import { RouteStoreService } from '../route-store.service';
   styleUrl: './route-shift.component.scss'
 })
 export class RouteShiftComponent {
- drivers: Driver[] = [];
+drivers: Driver[] = [];
   vans: Place[] = [];
-  routes: RouteStore[] = [];
-  filteredRoutes: RouteStore[] = [];
+  routes: any[] = [];
+  places: RouteStore[] = [];
 
   selectedDriverId: number | null = null;
   selectedVanId: number | null = null;
   selectedRouteId: number | null = null;
+  selectedPlace: RouteStore | null = null;
 
-  places: RouteStore[] = [];
-  selectedPlace: any = null;
+  shiftStarted = false;
 
   constructor(
-    private routeService: RouteService,
-    private routeStoreService: RouteStoreService,
     private driverService: DriverService,
-    private placeService: PlaceService
+    private placeService: PlaceService,
+    private routeService: RouteService,
+    private routeStoreService: RouteStoreService
   ) {}
 
   ngOnInit() {
@@ -45,66 +45,67 @@ export class RouteShiftComponent {
   }
 
   loadDrivers() {
-    // Load drivers from backend or mock
-    this.driverService.getDrivers().subscribe(data => {
-      this.drivers = data;
-    });
+    this.driverService.getDrivers().subscribe(data => this.drivers = data);
   }
 
   loadVans() {
-    // Load vans from backend or mock
-    this.placeService.getByType('VAN').subscribe(data => {
-      this.vans = data;
-    })
+    this.placeService.getByType('VAN').subscribe(data => this.vans = data);
   }
 
   loadRoutes() {
-    // Load all routes from backend or mock
-    this.routeService.getAll().subscribe(data => {
-      this.routes = data;
-    })
-    this.filteredRoutes = [];
+    this.routeService.getAll().subscribe(data => this.routes = data);
   }
 
   onSelectionChange() {
-    if (this.selectedDriverId && this.selectedVanId) {
-      this.filteredRoutes = this.routes.filter(
-        // r => r.driverId === this.selectedDriverId && r.vanId === this.selectedVanId
-        r => r.id !== this.selectedRouteId
-      );
-      this.selectedRouteId = null;
-      this.places = [];
-    }
+    // Reset dependent states if driver or van changes
+    if (this.shiftStarted) return; // prevent changes after shift started
+    this.selectedRouteId = null;
+    this.places = [];
+    this.selectedPlace = null;
   }
-
-  onDriverOrVanChange() {
-  // Reset route & places when driver or van changes
-  this.selectedRouteId = null;
-  this.places = [];
-
-  if (this.selectedDriverId && this.selectedVanId) {
-    this.filteredRoutes = this.routes.filter(
-       r => r.id !== this.selectedRouteId
-      // r.driverId === this.selectedDriverId && r.placeId === this.selectedVanId
-    );
-  } else {
-    this.filteredRoutes = [];
-  }
-}
-
 
   loadPlaces() {
     if (!this.selectedRouteId) {
       this.places = [];
       return;
     }
-    // Fetch places (warehouses + stores) for route from backend or mock
-    this.routeStoreService.getByRoute(this.selectedRouteId).subscribe(places => {
-      this.places = places;
-    });
+    this.routeStoreService.getByRoute(this.selectedRouteId).subscribe(data => this.places = data);
   }
 
-  openPlace(place: any) {
+  getDriverName(id: number): string {
+    const driver = this.drivers.find(d => d.id === id);
+    return driver ? driver.name : '';
+  }
+
+  getVanPlate(id: number): string {
+    const van = this.vans.find(v => v.id === id);
+    // return van ? van.plateNumber : '';
+    return van ? van.name : ''
+  }
+
+  getRouteName(id: number): string {
+    const route = this.routes.find(r => r.id === id);
+    return route ? route.name : '';
+  }
+
+  startShift() {
+    if (this.selectedDriverId && this.selectedVanId && this.selectedRouteId) {
+      this.shiftStarted = true;
+      this.selectedPlace = null; // start with no place selected
+    }
+  }
+
+  resetSelection() {
+    this.selectedDriverId = null;
+    this.selectedVanId = null;
+    this.selectedRouteId = null;
+    this.places = [];
+    this.selectedPlace = null;
+    this.shiftStarted = false;
+  }
+
+  openPlace(place: RouteStore) {
+    if (!this.shiftStarted) return;
     this.selectedPlace = place;
   }
 
@@ -113,10 +114,9 @@ export class RouteShiftComponent {
   }
 
   onBasketInputConfirmed(basketChange: number) {
-    console.log(`Basket movement for ${this.selectedPlace.name}:`, basketChange);
-    // Send movement to backend with route, driver, van, place and basketChange info
+    console.log(`Basket movement for ${this.selectedPlace?.place.name}:`, basketChange);
+    // TODO: send movement to backend here
 
-    // Optionally show success message, reset or close input
     this.closeBasketInput();
   }
 }
