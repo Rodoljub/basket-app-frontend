@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { BasketInputComponent } from '../../basket-input/basket-input.component';
+import { BasketInputComponent } from './basket-input/basket-input.component';
 import { FormsModule } from '@angular/forms';
 import { RouteService } from '../route.service';
 import { DriverService } from '../../drivers/driver.service';
@@ -76,6 +76,22 @@ export class RouteShiftComponent {
       this.places = [];
     }
   }
+
+  onDriverOrVanChange() {
+  // Reset route & places when driver or van changes
+  this.selectedRouteId = null;
+  this.places = [];
+
+  if (this.selectedDriverId && this.selectedVanId) {
+    this.filteredRoutes = this.routes.filter(
+       r => r.id !== this.selectedRouteId
+      // r.driverId === this.selectedDriverId && r.placeId === this.selectedVanId
+    );
+  } else {
+    this.filteredRoutes = [];
+  }
+}
+
 
   loadPlaces() {
     if (!this.selectedRouteId) {

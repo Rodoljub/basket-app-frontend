@@ -1,24 +1,45 @@
 <h2>Assign Route Shift</h2>
 
-<!-- Select Driver -->
+
 <label>Driver:</label>
-<select [(ngModel)]="selectedDriverId" (change)="onSelectionChange()">
+<select [(ngModel)]="selectedDriverId" (change)="onDriverOrVanChange()">
+  <option [ngValue]="null" disabled selected>-- Select Driver --</option>
   <option *ngFor="let driver of drivers" [value]="driver.id">{{ driver.name }}</option>
 </select>
 
-<!-- Select Van -->
 <label>Van:</label>
-<select [(ngModel)]="selectedVanId" (change)="onSelectionChange()">
+<select [(ngModel)]="selectedVanId" (change)="onDriverOrVanChange()" [disabled]="!selectedDriverId">
+  <option [ngValue]="null" disabled selected>-- Select Van --</option>
   <option *ngFor="let van of vans" [value]="van.id">{{ van.name }}</option>
 </select>
 
-<!-- Select Route -->
 <label>Route:</label>
-<select [(ngModel)]="selectedRouteId" (change)="loadPlaces()">
+<select [(ngModel)]="selectedRouteId" (change)="loadPlaces()" [disabled]="!selectedDriverId || !selectedVanId">
+  <option [ngValue]="null" disabled selected>-- Select Route --</option>
   <option *ngFor="let route of filteredRoutes" [value]="route.id">
     {{ route.name || ('Route #' + route.id) }}
   </option>
 </select>
+
+<!-- Select Driver -->
+<!-- <label>Driver:</label>
+<select [(ngModel)]="selectedDriverId" (change)="onSelectionChange()">
+  <option *ngFor="let driver of drivers" [value]="driver.id">{{ driver.name }}</option>
+</select> -->
+
+<!-- Select Van -->
+<!-- <label>Van:</label>
+<select [(ngModel)]="selectedVanId" (change)="onSelectionChange()">
+  <option *ngFor="let van of vans" [value]="van.id">{{ van.name }}</option>
+</select> -->
+
+<!-- Select Route -->
+<!-- <label>Route:</label>
+<select [(ngModel)]="selectedRouteId" (change)="loadPlaces()">
+  <option *ngFor="let route of filteredRoutes" [value]="route.id">
+    {{ route.name || ('Route #' + route.id) }}
+  </option>
+</select> -->
 
 <!-- Show Warehouses and Stores after selection -->
 <div *ngIf="places.length > 0">

@@ -3,7 +3,7 @@ import { RouteService } from '../route.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RoutePlannerComponent } from '../route-planner/route-planner.component';
-import { BasketInputComponent } from '../../basket-input/basket-input.component';
+import { BasketInputComponent } from '../route-shift/basket-input/basket-input.component';
 
 @Component({
   selector: 'app-route-menager',
