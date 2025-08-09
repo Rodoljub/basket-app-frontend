@@ -14,6 +14,10 @@ export abstract class ApiService<T> {
     return this.http.get<T>(`${this.url}/${id}`);
   }
 
+  getByType(type: string): Observable<T[]> {
+    return this.http.get<T[]>(`${this.url}/by-type?type=${type}`)
+  }
+
   create(data: Partial<T>): Observable<T> {
     return this.http.post<T>(this.url, data);
   }

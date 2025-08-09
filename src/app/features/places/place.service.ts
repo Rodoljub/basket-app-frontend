@@ -5,4 +5,6 @@ import { Place } from './place.model';
 @Injectable({ providedIn: 'root' })
 export class PlaceService extends ApiService<Place> {
   protected override url = 'http://localhost:3000/api/places';
+
+
 }

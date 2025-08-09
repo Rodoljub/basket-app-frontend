@@ -15,7 +15,8 @@ export class BasketInputComponent {
   inputStr = '';
   isNegative = false;
 
-  quickValues = [-100, -50, -10, -5, -1, 1, 5, 10, 50, 100];
+  //  -100, , 100
+  quickValues = [ -50, -10, -5, -1, 1, 5, 10, 50];
   errorMessage = '';
 
   appendDigit(digit: string) {

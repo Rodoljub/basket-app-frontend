@@ -1,0 +1,38 @@
+<h2>Assign Route Shift</h2>
+
+<!-- Select Driver -->
+<label>Driver:</label>
+<select [(ngModel)]="selectedDriverId" (change)="onSelectionChange()">
+  <option *ngFor="let driver of drivers" [value]="driver.id">{{ driver.name }}</option>
+</select>
+
+<!-- Select Van -->
+<label>Van:</label>
+<select [(ngModel)]="selectedVanId" (change)="onSelectionChange()">
+  <option *ngFor="let van of vans" [value]="van.id">{{ van.name }}</option>
+</select>
+
+<!-- Select Route -->
+<label>Route:</label>
+<select [(ngModel)]="selectedRouteId" (change)="loadPlaces()">
+  <option *ngFor="let route of filteredRoutes" [value]="route.id">
+    {{ route.name || ('Route #' + route.id) }}
+  </option>
+</select>
+
+<!-- Show Warehouses and Stores after selection -->
+<div *ngIf="places.length > 0">
+  <h3>Select Place to enter basket movement</h3>
+  <ul>
+    <li *ngFor="let place of places">
+      <button (click)="openPlace(place)">{{ place.place.name }} ({{ place.place.type }})</button>
+    </li>
+  </ul>
+</div>
+
+<!-- Basket input dialog -->
+<div *ngIf="selectedPlace">
+  <h3>Basket Movement - {{ selectedPlace.name }}</h3>
+  <app-basket-input (confirmed)="onBasketInputConfirmed($event)"></app-basket-input>
+  <button (click)="closeBasketInput()">Close</button>
+</div>

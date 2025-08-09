@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { RouteStoreService } from '../route-store.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -11,7 +11,7 @@ import { PlaceService } from '../../places/place.service';
   templateUrl: './route-planner.component.html',
   styleUrl: './route-planner.component.scss',
 })
-export class RoutePlannerComponent implements OnInit {
+export class RoutePlannerComponent implements OnInit, OnChanges {
   @Input() routeId!: number;
   routeStores: any[] = [];
 
@@ -25,6 +25,13 @@ export class RoutePlannerComponent implements OnInit {
   ngOnInit() {
     this.load();
     this.loadPlaces();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['routeId']) {
+      console.log('routeId changed', changes['routeId'].currentValue)
+      this.load();
+    }
   }
 
   load() {

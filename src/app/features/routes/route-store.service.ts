@@ -2,6 +2,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { RouteStore } from './route-store.model';
+import { Place } from '../places/place.model';
 
 @Injectable({ providedIn: 'root' })
 export class RouteStoreService {
@@ -14,7 +15,7 @@ export class RouteStoreService {
 }
 
   getByRoute(routeId: number) {
-    return this.http.get<any[]>(`${this.baseUrl}/by-route/${routeId}`);
+    return this.http.get<RouteStore[]>(`${this.baseUrl}/by-route/${routeId}`);
   }
 
   addToRoute(routeId: number, placeId: number) {

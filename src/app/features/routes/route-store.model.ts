@@ -1,6 +1,7 @@
 export interface RouteStore {
   id: number;
   routeId: number;
+  name: string;
   placeId: number;
   order: number;
   createdAt: string;

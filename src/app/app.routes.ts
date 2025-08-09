@@ -18,6 +18,12 @@ export const appRoutes: Routes = [
     loadComponent: () =>
       import('./features/drivers/driver-list/driver-list.component').then(m => m.DriverListComponent)
   },
+
+  { path: 'shift',
+    loadComponent: () => 
+      import('./features/routes/route-shift/route-shift.component').then(m => m.RouteShiftComponent)
+    
+  },
   {
     path: '*',
     redirectTo: '',
