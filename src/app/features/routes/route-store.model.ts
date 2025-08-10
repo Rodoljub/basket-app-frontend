@@ -1,3 +1,5 @@
+import { Place } from "../places/place.model";
+
 export interface RouteStore {
   id: number;
   routeId: number;
@@ -6,9 +8,5 @@ export interface RouteStore {
   placeId: number;
   order: number;
   createdAt: string;
-  place: {
-    id: number;
-    name: string;
-    type: string;
-  };
+  place: Place
 }

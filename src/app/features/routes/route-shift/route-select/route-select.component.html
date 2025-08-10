@@ -1,0 +1,5 @@
+  <label>Route:</label>
+    <select [ngModel]="selectedRouteId" (ngModelChange)="routeSelected.emit($event)" [disabled]="!enabled">
+      <option [ngValue]="null" disabled>-- Select Route --</option>
+      <option *ngFor="let route of routes" [ngValue]="route.id">{{ route.name || ('Route #' + route.id) }}</option>
+    </select>

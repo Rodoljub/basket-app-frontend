@@ -1,4 +1,4 @@
-<h2>Assign Route Shift</h2>
+<!-- <h2>Assign Route Shift</h2>
 
 <label>Driver:</label>
 <select [(ngModel)]="selectedDriverId" (change)="onSelectionChange()">
@@ -9,7 +9,6 @@
 <label>Van:</label>
 <select [(ngModel)]="selectedVanId" (change)="onVanSelected()" [disabled]="!selectedDriverId">
   <option [ngValue]="null" disabled selected>-- Select Van --</option>
-  <!-- van.plateNumber -->
   <option *ngFor="let van of vans" [ngValue]="van.id">{{ van.name }}</option>
 </select>
 
@@ -19,7 +18,6 @@
   <option *ngFor="let route of routes" [ngValue]="route.id">{{ route.name || ('Route #' + route.id) }}</option>
 </select>
 
-<!-- Shift Summary Panel -->
 <div *ngIf="selectedDriverId && selectedVanId && selectedRouteId" class="shift-summary">
   <h3>Shift Summary</h3>
   <p><strong>Driver:</strong> {{ getDriverName(selectedDriverId) }}</p>
@@ -31,14 +29,12 @@
   <button (click)="resetSelection()" [disabled]="shiftStarted">Reset</button>
 </div>
 
-<!-- Basket input dialog -->
 <div *ngIf="shiftStarted && selectedPlace">
   <h3>Basket Movement - {{ selectedPlace.place.name }}</h3>
   <app-basket-input (confirmed)="onBasketInputConfirmed($event)"></app-basket-input>
   <button (click)="closeBasketInput()">Close</button>
 </div>
 
-<!-- Places list -->
 <div *ngIf="shiftStarted && places.length > 0 && !selectedPlace" class="places-list">
   <h3>Select Place to enter basket movement</h3>
   <ul>
@@ -46,4 +42,48 @@
       <button (click)="openPlace(place)">{{ place.place.name }} ({{ place.place.type }})</button>
     </li>
   </ul>
-</div>
+</div> -->
+
+
+<app-driver-select 
+      [drivers]="drivers" 
+      [selectedDriverId]="selectedDriverId" 
+      (driverSelected)="selectedDriverId = $event; onSelectionChange()">
+    </app-driver-select>
+
+    <app-van-select
+      [vans]="vans"
+      [selectedVanId]="selectedVanId"
+      [enabled]="!!selectedDriverId"
+      (vanSelected)="onVanSelected($event)">
+    </app-van-select>
+
+    <app-route-select
+      [routes]="routes"
+      [selectedRouteId]="selectedRouteId"
+      [enabled]="!!selectedVanId"
+      (routeSelected)="selectedRouteId = $event; loadPlaces()">
+    </app-route-select>
+
+    <app-shift-summary
+      *ngIf="selectedDriverId && selectedVanId && selectedRouteId"
+      [driverName]="getDriverName(selectedDriverId)"
+      [vanPlate]="getVanPlate(selectedVanId)"
+      [routeName]="getRouteName(selectedRouteId)"
+      [shiftStarted]="shiftStarted"
+      (startShift)="startShift()"
+      (reset)="resetSelection()">
+    </app-shift-summary>
+
+    <app-place-list
+      *ngIf="shiftStarted && places.length > 0 && !selectedPlace"
+      [places]="places"
+      (placeSelected)="openPlace($event)">
+    </app-place-list>
+
+    <app-basket-movement-dialog
+      *ngIf="shiftStarted && selectedPlace"
+      [place]="selectedPlace.place"
+      (movementConfirmed)="onBasketInputConfirmed($event)"
+      (close)="closeBasketInput()">
+    </app-basket-movement-dialog>

@@ -1,0 +1,8 @@
+  <h3>Select Place to enter basket movement</h3>
+    <ul>
+      <li *ngFor="let place of places">
+        <button (click)="placeSelected.emit(place)">
+          {{ place.place.name }} ({{ place.place.type }})
+        </button>
+      </li>
+    </ul>

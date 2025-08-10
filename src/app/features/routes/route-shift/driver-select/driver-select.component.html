@@ -1,0 +1,5 @@
+ <label>Driver:</label>
+    <select [ngModel]="selectedDriverId" (ngModelChange)="driverSelected.emit($event)">
+      <option [ngValue]="null" disabled>-- Select Driver --</option>
+      <option *ngFor="let driver of drivers" [ngValue]="driver.id">{{ driver.name }}</option>
+    </select>

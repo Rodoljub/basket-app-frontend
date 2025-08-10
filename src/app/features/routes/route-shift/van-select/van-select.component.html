@@ -1,0 +1,5 @@
+  <label>Van:</label>
+    <select [ngModel]="selectedVanId" (ngModelChange)="vanSelected.emit($event)" [disabled]="!enabled">
+      <option [ngValue]="null" disabled>-- Select Van --</option>
+      <option *ngFor="let van of vans" [ngValue]="van.id">{{ van.name }}</option>
+    </select>

@@ -1,0 +1,8 @@
+<div class="shift-summary">
+      <h3>Shift Summary</h3>
+      <p><strong>Driver:</strong> {{ driverName }}</p>
+      <p><strong>Van:</strong> {{ vanPlate }}</p>
+      <p><strong>Route:</strong> {{ routeName }}</p>
+      <button (click)="startShift.emit()" [disabled]="shiftStarted">Start Shift</button>
+      <button (click)="reset.emit()" [disabled]="shiftStarted">Reset</button>
+    </div>

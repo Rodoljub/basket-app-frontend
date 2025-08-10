@@ -18,6 +18,7 @@ export class RouteStoreService {
     return this.http.get<RouteStore[]>(`${this.baseUrl}/by-route/${routeId}`);
   }
 
+
   addToRoute(routeId: number, placeId: number) {
     return this.http.post(this.baseUrl, { routeId, placeId });
   }
