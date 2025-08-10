@@ -9,23 +9,37 @@ export interface Inventory {
   quantity: number;
 }
 
+export interface InventoryResponse {
+  placeId: string;
+  inventory: Inventory[];
+}
+
+const initialInventoryResponse: InventoryResponse = {
+  placeId: '',
+  inventory: []
+};
+
 @Injectable({
   providedIn: 'root'
 })
 export class InventoryService {
-  private baseUrl = '/api/inventories'; // adjust if your API uses another path
+  private baseUrl = 'http://localhost:3000/api/inventories'; // adjust if your API uses another path
 //   private apiUrl = `${environment.apiUrl}/inventory`;
-  private inventorySubject = new BehaviorSubject<Inventory[]>([]);
+ 
+  private inventorySubject = new BehaviorSubject<InventoryResponse>(initialInventoryResponse);
   inventory$ = this.inventorySubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
   loadInventoryForPlace(placeId: number): void {
-    this.http.get<Inventory[]>(`${this.baseUrl}/place/${placeId}`)
-      .subscribe((data) => this.inventorySubject.next(data));
+    this.http.get<InventoryResponse>(`${this.baseUrl}/place/${placeId}`)
+      .subscribe((data) => {
+        console.log("invservice", data)     
+        this.inventorySubject.next(data)
+  });
   }
 
-  getInventorySnapshot(): Inventory[] {
+  getInventorySnapshot(): InventoryResponse {
     return this.inventorySubject.getValue();
   }
 

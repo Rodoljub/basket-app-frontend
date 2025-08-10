@@ -4,11 +4,10 @@ import { PlaceService } from '../../places/place.service';
 import { RouteService } from '../route.service';
 import { RouteStoreService } from '../route-store.service';
 import { BasketService } from './basket-input/basket.service';
-import { InventoryService, Inventory } from '../../inventory/inventory.service';
+import { InventoryService, Inventory, InventoryResponse } from '../../inventory/inventory.service';
 import { Driver } from '../../drivers/driver.model';
 import { Place } from '../../places/place.model';
 import { RouteStore } from '../route-store.model';
-
 
 import { CommonModule } from '@angular/common';
 import { DriverSelectComponent } from './driver-select/driver-select.component';
@@ -17,6 +16,11 @@ import { RouteSelectComponent } from './route-select/route-select.component';
 import { ShiftSummaryComponent } from './shift-summary/shift-summary.component';
 import { PlaceListComponent } from './shift-place-list/shift-place-list.component';
 import { BasketMovementDialogComponent } from './basket-movement-dialog/basket-movement-dialog.component';
+
+const initialInventoryResponse: InventoryResponse = {
+  placeId: '',
+  inventory: []
+};
 
 @Component({
   selector: 'app-route-shift',
@@ -28,11 +32,10 @@ import { BasketMovementDialogComponent } from './basket-movement-dialog/basket-m
     RouteSelectComponent,
     ShiftSummaryComponent,
     PlaceListComponent,
-    BasketMovementDialogComponent
+    BasketMovementDialogComponent,
   ],
-    templateUrl: './route-shift.component.html',
-//   styleUrl: './route-shift.component.scss'
-
+  templateUrl: './route-shift.component.html',
+  //   styleUrl: './route-shift.component.scss'
 })
 export class RouteShiftComponent {
   drivers: Driver[] = [];
@@ -46,7 +49,9 @@ export class RouteShiftComponent {
   selectedPlace: RouteStore | null = null;
 
   shiftStarted = false;
-  currentInventory: Inventory[] = [];
+  currentInventory: InventoryResponse = initialInventoryResponse;
+
+  showBasketInputModal = false;
 
   constructor(
     private driverService: DriverService,
@@ -61,19 +66,21 @@ export class RouteShiftComponent {
     this.loadDrivers();
     this.loadVans();
     this.loadRoutes();
-    this.inventoryService.inventory$.subscribe(inv => this.currentInventory = inv);
+    this.inventoryService.inventory$.subscribe(
+      (inv) => (this.currentInventory = inv)
+    );
   }
 
   loadDrivers() {
-    this.driverService.getDrivers().subscribe(data => this.drivers = data);
+    this.driverService.getDrivers().subscribe((data) => (this.drivers = data));
   }
 
   loadVans() {
-    this.placeService.getByType('VAN').subscribe(data => this.vans = data);
+    this.placeService.getByType('VAN').subscribe((data) => (this.vans = data));
   }
 
   loadRoutes() {
-    this.routeService.getAll().subscribe(data => this.routes = data);
+    this.routeService.getAll().subscribe((data) => (this.routes = data));
   }
 
   loadPlaces() {
@@ -81,19 +88,35 @@ export class RouteShiftComponent {
       this.places = [];
       return;
     }
-    this.routeStoreService.getByRoute(this.selectedRouteId).subscribe(data => 
-  {
-      this.places = data
-console.log('routestores', this.places)
-    console.log('data', data)}
-    );
-    
-    
+    this.routeStoreService
+      .getByRoute(this.selectedRouteId)
+      .subscribe((data) => {
+        this.places = data;
+        console.log('routestores', this.places);
+        console.log('data', data);
+      });
   }
 
-  getDriverName(id: number) { return this.drivers.find(d => d.id === id)?.name || ''; }
-  getVanPlate(id: number) { return this.vans.find(v => v.id === id)?.name || ''; }
-  getRouteName(id: number) { return this.routes.find(r => r.id === id)?.name || ''; }
+  getDriverName(id: number) {
+    return this.drivers.find((d) => d.id === id)?.name || '';
+  }
+  getVanPlate(id: number) {
+    return this.vans.find((v) => v.id === id)?.name || '';
+  }
+  getRouteName(id: number) {
+    return this.routes.find((r) => r.id === id)?.name || '';
+  }
+
+  getInventorySummary(placeId: number): boolean {
+    console.log('inventory ', this.currentInventory);
+    return Number(this.currentInventory.placeId) === placeId ? true : false;
+  }
+
+  getBasketCount(placeId: number, basketType: 'BIG' | 'SMALL'): number {
+    return this.currentInventory.inventory
+      .filter((inv) => inv.basketType === basketType)
+      .reduce((sum, inv) => sum + inv.quantity, 0);
+  }
 
   onSelectionChange() {
     if (this.shiftStarted) return;
@@ -105,10 +128,12 @@ console.log('routestores', this.places)
   onVanSelected(vanId: number) {
     this.selectedVanId = vanId;
     if (this.selectedDriverId) {
-      this.driverService.updateDriver(this.selectedDriverId, { vanId }).subscribe(() => {
-        console.log('Driver van updated');
-        this.loadDrivers();
-      });
+      this.driverService
+        .updateDriver(this.selectedDriverId, { vanId })
+        .subscribe(() => {
+          console.log('Driver van updated');
+          this.loadDrivers();
+        });
     }
   }
 
@@ -128,33 +153,44 @@ console.log('routestores', this.places)
     this.shiftStarted = false;
   }
 
-  openPlace(place: RouteStore) { 
-    if (this.shiftStarted) this.selectedPlace = place; 
+  openPlace(place: RouteStore) {
+    if (this.shiftStarted) this.selectedPlace = place;
 
-    console.log("selectedPlace", this.selectedPlace)
+    console.log('selectedPlace', this.selectedPlace);
+
+    if (this.selectedPlace?.place?.id) {
+      this.inventoryService.loadInventoryForPlace(this.selectedPlace.place.id);
+    }
   }
-  closeBasketInput() { this.selectedPlace = null; }
+
+  openBasketInput() {
+    this.showBasketInputModal = true;
+  }
+
+  closeBasketInput() {
+    this.showBasketInputModal = false;
+    this.selectedPlace = null;
+  }
 
   onBasketInputConfirmed(delta: number) {
-    if (!this.selectedPlace?.place?.id || !this.selectedRouteId || !this.selectedDriverId) return;
-    this.basketService.createSimplifiedMovement(
-      this.selectedPlace.place.id,
-      this.selectedRouteId,
-      this.selectedDriverId,
-      'BIG',
-      delta
-    ).subscribe(res => console.log('Movement recorded', res));
+    if (
+      !this.selectedPlace?.place?.id ||
+      !this.selectedRouteId ||
+      !this.selectedDriverId
+    )
+      return;
+    this.basketService
+      .createSimplifiedMovement(
+        this.selectedPlace.place.id,
+        this.selectedRouteId,
+        this.selectedDriverId,
+        'BIG',
+        delta
+      )
+      .subscribe((res) => console.log('Movement recorded', res));
     this.closeBasketInput();
   }
 }
-
-
-
-
-
-
-
-
 
 // import { CommonModule } from '@angular/common';
 // import { Component } from '@angular/core';
@@ -169,7 +205,6 @@ console.log('routestores', this.places)
 // import { RouteStoreService } from '../route-store.service';
 // import { BasketService } from './basket-input/basket.service';
 // import { Inventory, InventoryService } from '../../inventory/inventory.service';
-
 
 // @Component({
 //   selector: 'app-route-shift',
@@ -192,7 +227,7 @@ console.log('routestores', this.places)
 //   shiftStarted = false;
 
 //   currentInventory: Inventory[] = [];
-  
+
 //   constructor(
 //     private driverService: DriverService,
 //     private placeService: PlaceService,
@@ -337,12 +372,10 @@ console.log('routestores', this.places)
 //     next: (res) => {
 //       console.log('Movement recorded', res);
 //       console.log('selectedPlace', this.selectedPlace?.place.id);
-      
 
 //       if (this.selectedPlace?.place.id) {
 //   this.inventoryService.loadInventoryForPlace(this.selectedPlace.place.id);
 // }
-
 
 //     },
 //     error: (err) => {

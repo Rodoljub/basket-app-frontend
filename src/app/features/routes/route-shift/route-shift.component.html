@@ -81,8 +81,20 @@
       (placeSelected)="openPlace($event)">
     </app-place-list>
 
+<div *ngIf="selectedPlace && !showBasketInputModal">
+  <p>Current inventory at {{ selectedPlace.place.name }}:</p>
+  <ul>
+    <li *ngIf="getInventorySummary(selectedPlace.place.id); else noInventory">
+      Big baskets: {{ getBasketCount(selectedPlace.place.id, 'BIG')  || 0 }}<br>
+      Small baskets: {{ getBasketCount(selectedPlace.place.id, 'SMALL') || 0 }}
+    </li>
+    <ng-template #noInventory><li>No inventory data available.</li></ng-template>
+  </ul>
+  <button (click)="openBasketInput()">Update Basket</button>
+</div>
+
     <app-basket-movement-dialog
-      *ngIf="shiftStarted && selectedPlace"
+      *ngIf="shiftStarted && selectedPlace && showBasketInputModal"
       [place]="selectedPlace.place"
       (movementConfirmed)="onBasketInputConfirmed($event)"
       (close)="closeBasketInput()">
