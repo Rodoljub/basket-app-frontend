@@ -165,6 +165,31 @@ export class RouteShiftComponent {
     }
   }
 
+  finishShift() {
+  if (!this.shiftStarted) return; // no active shift
+
+  // Optionally: add any validation if needed before finishing
+
+  this.shiftStarted = false;
+
+  // Optionally reset selections or keep driver/van for next shift
+  this.selectedPlace = null;
+  this.selectedRouteId = null;
+  this.selectedVanId = null;
+  this.selectedDriverId = null;
+  this.places = [];
+
+  // Reset inventory views
+  this.currentInventory = initialInventoryResponse;
+  this.vanInventory = initialInventoryResponse;
+
+  // Save cleared state
+  this.saveStateToStorage();
+
+  console.log('Shift finished and reset.');
+}
+
+
   loadVanInventory(vanId: number) {
     this.inventoryService.loadInventoryForPlace(vanId);
     // Subscribe to inventory observable to update vanInventory when loaded:

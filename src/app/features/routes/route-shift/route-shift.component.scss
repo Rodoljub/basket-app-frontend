@@ -84,6 +84,20 @@ button:first-of-type:focus {
   outline: none;
 }
 
+.btn-finish-shift {
+  margin: 1rem 0;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border-radius: 4px;
+}
+.btn-finish-shift:hover {
+  background-color: #c0392b;
+}
+
+
 @media (max-width: 400px) {
   div {
     padding: 0.8rem;
