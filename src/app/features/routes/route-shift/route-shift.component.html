@@ -1,5 +1,5 @@
 
-
+<ng-container *ngIf="!shiftStarted">
 <app-driver-select
   [drivers]="drivers"
   [selectedDriverId]="selectedDriverId"
@@ -22,9 +22,10 @@
   (routeSelected)="selectedRouteId = $event; loadPlaces()"
 >
 </app-route-select>
+</ng-container>
 
 <app-shift-summary
-  *ngIf="selectedDriverId && selectedVanId && selectedRouteId"
+  *ngIf="!shiftStarted && selectedDriverId && selectedVanId && selectedRouteId"
   [driverName]="getDriverName(selectedDriverId)"
   [vanPlate]="getVanPlate(selectedVanId)"
   [routeName]="getRouteName(selectedRouteId)"
