@@ -26,5 +26,10 @@ export class RouteService {
   updateRoute(routeId: number, name: string, driverId: number) {
     return this.http.put<RouteStore>(`${this.baseUrl}/${routeId}`, { name, driverId });
 }
+
+patchRoute(routeId: number, changes: { name?: string; driverId?: number }) {
+  return this.http.patch<any>(`${this.baseUrl}/${routeId}`, changes);
+}
+
   
 }

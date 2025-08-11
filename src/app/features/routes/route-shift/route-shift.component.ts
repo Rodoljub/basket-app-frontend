@@ -110,6 +110,28 @@ export class RouteShiftComponent {
     return this.routes.find((r) => r.id === id)?.name || '';
   }
 
+  nullToUndefined<T>(value: T | null): T | undefined {
+  return value === null ? undefined : value;
+}
+
+  onRouteSelected(routeId: number) {
+  this.selectedRouteId = routeId;
+
+  if (!this.selectedRouteId) {
+    this.places = [];
+    return;
+  }
+
+  // ✅ 1. Update route with driverId in backend
+  this.routeService
+    .patchRoute(this.selectedRouteId, { driverId: this.nullToUndefined(this.selectedDriverId) })
+    .subscribe(() => {
+      console.log('Driver assigned to route');
+      // ✅ 2. Load places after backend update
+      this.loadPlaces();
+    });
+}
+
   loadPlaces() {
     if (!this.selectedRouteId) {
       this.places = [];

@@ -95,25 +95,48 @@
   user-select: none;
 }
 
+// .quick-buttons {
+//   display: flex;
+//   justify-content: center;
+//   gap: 12px;
+//   margin-bottom: 1rem;
+// }
+
+// .quick-buttons button {
+//   flex: 1;
+//   min-width: 48px;
+//   padding: 0.5rem 0;
+//   background: #007bff;
+//   border: none;
+//   color: white;
+//   font-size: 1.1rem;
+//   border-radius: 8px;
+//   cursor: pointer;
+//   transition: background-color 0.3s ease;
+// }
+
 .quick-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  margin-bottom: 1rem;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 equal columns */
+  gap: 8px; /* space between buttons */
+  padding: 0 12px;
 }
 
 .quick-buttons button {
-  flex: 1;
-  min-width: 48px;
-  padding: 0.5rem 0;
-  background: #007bff;
-  border: none;
-  color: white;
-  font-size: 1.1rem;
-  border-radius: 8px;
+  width: 100%;       /* fill the grid cell */
+  padding: 8px 12px;
+  margin-bottom: 6px;
+  font-size: 16px;
+  border-radius: 6px;
   cursor: pointer;
+  white-space: nowrap;
+
+  background: #007bff;
+  color: white;
   transition: background-color 0.3s ease;
 }
+
+
 
 .quick-buttons button:hover {
   background: #0056b3;

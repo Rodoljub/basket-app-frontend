@@ -19,7 +19,7 @@
   [routes]="routes"
   [selectedRouteId]="selectedRouteId"
   [enabled]="!!selectedVanId"
-  (routeSelected)="selectedRouteId = $event; loadPlaces()"
+  (routeSelected)="selectedRouteId = $event; onRouteSelected($event)"
 >
 </app-route-select>
 </ng-container>
