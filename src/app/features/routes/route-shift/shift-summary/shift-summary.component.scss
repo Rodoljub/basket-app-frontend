@@ -1,0 +1,68 @@
+.shift-summary {
+  background: #fff;
+  border-radius: 8px;
+  padding: 16px 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  max-width: 360px;
+  margin: 16px auto;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+.shift-summary h3 {
+  margin-bottom: 12px;
+  font-size: 1.3rem;
+  font-weight: 600;
+  text-align: center;
+  color: #222;
+}
+
+.shift-summary p {
+  font-size: 1rem;
+  margin: 8px 0;
+  line-height: 1.4;
+}
+
+.shift-summary strong {
+  font-weight: 700;
+  color: #007bff;
+}
+
+.shift-summary button {
+  width: 48%;
+  padding: 10px 0;
+  margin: 10px 1% 0 1%;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  color: white;
+}
+
+.shift-summary button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  color: #666;
+}
+
+.shift-summary button:not(:disabled):first-of-type {
+  background-color: #28a745; /* green for start */
+}
+
+.shift-summary button:not(:disabled):last-of-type {
+  background-color: #dc3545; /* red for reset */
+}
+
+@media (max-width: 400px) {
+  .shift-summary {
+    max-width: 95%;
+    padding: 12px 16px;
+  }
+  
+  .shift-summary button {
+    width: 100%;
+    margin: 8px 0 0 0;
+  }
+}

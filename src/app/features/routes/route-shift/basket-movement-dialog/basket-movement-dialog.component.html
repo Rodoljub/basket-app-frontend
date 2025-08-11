@@ -1,5 +1,7 @@
  <div class="basket-dialog">
-      <h3>Basket Movement - {{ place?.name }}</h3>
-      <app-basket-input (confirmed)="movementConfirmed.emit($event)"></app-basket-input>
+  <!-- Basket Movement -  -->
+      <h3>{{ place?.name }}</h3>
       <button (click)="close.emit()">Close</button>
+      <app-basket-input (confirmed)="movementConfirmed.emit($event)"></app-basket-input>
+      
     </div>
