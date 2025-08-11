@@ -13,6 +13,7 @@ export class RouteService {
   getAll() {
     return this.http.get<any[]>(this.baseUrl);
   }
+  
 
   getById(id: number) {
     return this.http.get<any>(`${this.baseUrl}/${id}`)

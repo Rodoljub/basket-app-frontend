@@ -41,7 +41,7 @@ export class RoutePlannerComponent implements OnInit, OnChanges {
   }
 
   loadPlaces() {
-  this.placeService.getAll().subscribe(data => this.places = data);
+  this.placeService.getWarehousesAndStores().subscribe(data => this.places = data);
 }
 
 addPlaceToRoute() {
