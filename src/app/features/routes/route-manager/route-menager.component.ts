@@ -19,10 +19,10 @@ routes: any[] = [];
 
   constructor(private routeService: RouteService) {}
 
-  onBasketChange(value: number) {
-  console.log('Driver entered basket change:', value);
-  // send to backend or update movement
-}
+//   onBasketChange(value: number) {
+//   console.log('Driver entered basket change:', value);
+//   // send to backend or update movement
+// }
 
   ngOnInit() {
     this.loadRoutes();
