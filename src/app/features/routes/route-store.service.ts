@@ -3,10 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { RouteStore } from './route-store.model';
 import { Place } from '../places/place.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class RouteStoreService {
-  private baseUrl = 'http://localhost:3000/api/routestores'; // adjust if needed
+  private baseUrl = `${environment.apiUrl}/routestores` 
 
   constructor(private http: HttpClient) {}
 

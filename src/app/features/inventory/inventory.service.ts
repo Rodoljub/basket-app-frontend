@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 export interface Inventory {
   id: number;
@@ -23,7 +24,7 @@ const initialInventoryResponse: InventoryResponse = {
   providedIn: 'root'
 })
 export class InventoryService {
-  private baseUrl = 'http://localhost:3000/api/inventories'; // adjust if your API uses another path
+  private baseUrl = `${environment.apiUrl}/inventories`; // adjust if your API uses another path
 //   private apiUrl = `${environment.apiUrl}/inventory`;
  
   private inventorySubject = new BehaviorSubject<InventoryResponse>(initialInventoryResponse);

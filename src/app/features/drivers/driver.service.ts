@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Driver } from './driver.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DriverService {
-  private apiUrl = 'http://localhost:3000/api/drivers'; // Adjust if your backend URL differs
+  private apiUrl = `${environment.apiUrl}/drivers`; // Adjust if your backend URL differs
 
   constructor(private http: HttpClient) {}
 
